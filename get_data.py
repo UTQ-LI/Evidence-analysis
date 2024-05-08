@@ -1,30 +1,36 @@
-import winreg, os
+import winreg, os, socket, sqlite3
+from colorama import Fore
+
+class Functions:
+    def read_registry_key(self, key, subkey):
+        try:
+            with winreg.OpenKey(key, subkey) as reg_key:
+                subkey_count, value_count, _ = winreg.QueryInfoKey(reg_key)
+
+                subkeys = []
+                for i in range(subkey_count):
+                    subkeys.append(winreg.EnumKey(reg_key, i))
+
+                # Get values
+                values = {}
+                for i in range(value_count):
+                    value_name, value_data, value_type = winreg.EnumValue(reg_key, i)
+                    values[value_name] = value_data
+
+                return subkeys, values
+        except FileNotFoundError:
+            print("Registry key not found.")
+            return None, None
+        except Exception as e:
+            print(f"Error! {e}")
+            return None, None
 
 class Application_Execution:
-    def regedit(self, regedit_path, hkey, file):
-        reg_key = winreg.OpenKey(hkey, regedit_path, 0, winreg.KEY_READ)
-        num_subkeys, num_values, _ = winreg.QueryInfoKey(reg_key)
-        for i in range(num_values):
-            name, value, _ = winreg.EnumValue(reg_key, i)
-            with open(f"{file}.txt", "a") as output_file:
-                output_file.write(f"{name}: {value}\n")
-
-            output_file.close()
-
     def Shimcache(self):
-        regedit_path = r"SYSTEM\CurrentControlSet\Control\Session Manager\AppCompatCache"
-        try:
-            Application_Execution().regedit(regedit_path, winreg.HKEY_LOCAL_MACHINE, "Shimcache")
-        except Exception as e:
-            print(f"Error! {e}")
+        pass
 
-    # Dosya bulunamadı diyor daha sonra bakılacak
     def Task_Bar_Feature_Usage(self):
-        regedit_path = r"NTUSER\Software\Microsoft\Windows\CurrentVersion\Explorer\FeatureUsage"
-        try:
-            Application_Execution().regedit(regedit_path, winreg.HKEY_CURRENT_USER, "Task_Bar_Feature_Usage")
-        except Exception as e:
-            print(f"Error! {e}")
+        pass
 
     def Amache(self):
         pass
@@ -39,7 +45,36 @@ class Application_Execution:
         pass
 
     def Windows10_Timeline(self):
-        pass
+        try:
+            profile = os.getlogin()
+            account_id = f"L.{os.getlogin()}"
+            target_directory = f"C:\\Users\\{profile}\\AppData\\Local\\ConnectedDevicesPlatform\\{account_id}\\ActivitiesCache.db"
+
+            conn = sqlite3.connect(target_directory, timeout=10)
+            cursor = conn.cursor()
+
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+            tables = cursor.fetchall()
+
+            with open("Windows_Timeline.txt", "w") as TimelineFile:
+                for table in tables:
+                    table_name = table[0]
+                    TimelineFile.write(str(f"--------------------- {table_name} ---------------------\n"))
+                    cursor.execute(f"SELECT * FROM {table_name};")
+                    rows = cursor.fetchall()
+
+                    for row in rows:
+                        TimelineFile.write(str(row))
+                        TimelineFile.write("\n")
+
+                    TimelineFile.write("\n")
+
+            conn.close()
+        except sqlite3.Error as sqlite_error:
+            print(f"{Fore.RED}Sqlite hatası! {sqlite_error}{Fore.RESET}")
+
+        except Exception as e:
+            print(f"{Fore.RED}Error! {e}{Fore.RESET}")
 
     def BAMDAM(self):
         pass
@@ -232,11 +267,46 @@ class External_Device_USB_Usage:
         pass
 
 class SystemInformation:
+    def Windows_Defender(self):
+        try:
+            target_directory = r"C:\ProgramData\Microsoft\Windows Defender\Support"
+
+            with open(f"{target_directory}\\MPDetection-20240419-192123.log", "r") as MPDetection:
+                DefenderDetection = MPDetection.read()
+
+            MPDetection.close()
+
+            with open(f"{target_directory}\\MPDeviceControl-20240419-221710.log", "r") as MPDeviceControl:
+                DefenderDeviceControl = MPDeviceControl.read()
+
+                MPDeviceControl.close()
+
+            with open(f"{target_directory}\\MPLog-20240419-192123.log", "r") as MPLog:
+                DefenderLog = MPLog.read()
+
+            MPLog.close()
+
+            with open(f"{target_directory}\\MPScanSkip-20240420-132450.log", "r") as MPScanSkip:
+                DefenderScanSkip = MPScanSkip.read()
+
+            MPScanSkip.close()
+
+            with open("Windows_Defender.txt", "w") as WindowsDefender:
+                WindowsDefender.write(
+                    str(f"--------------------- Defender Detection ---------------------\n{DefenderDetection}\n--------------------- Defender Device Control ---------------------\n{DefenderDeviceControl}\n--------------------- Defender Log ---------------------\n{DefenderLog}\n--------------------- Defender Scan Skip ---------------------\n{DefenderScanSkip}"))
+            WindowsDefender.close()
+
+        except Exception as e:
+            print(f"Error! {e}")
+
     def Operating_System_Version(self):
         pass
 
     def ComputerName(self):
-        pass
+        try:
+            print(f"Computer Name: {socket.gethostname()}")
+        except Exception as e:
+            print(f"{Fore.RED}Error! {e}{Fore.RESET}")
 
     def System_Boot_Autostart_Programs(self):
         pass
@@ -339,6 +409,7 @@ class Start:
         # External Device USB Usage Sonu
         # .................................
         systemInformation = SystemInformation()
+        systemInformation.Windows_Defender()
         systemInformation.Operating_System_Version()
         systemInformation.ComputerName()
         systemInformation.System_Boot_Autostart_Programs()
