@@ -2,46 +2,58 @@ import winreg, os, socket, sqlite3
 from colorama import Fore
 
 class Functions:
-    def read_registry_key(self, key, subkey):
+    def __init__(self):
+        self.errorFile = "errors.txt"
+
+    def get_regedit(self, regedit_path):
         try:
-            with winreg.OpenKey(key, subkey) as reg_key:
-                subkey_count, value_count, _ = winreg.QueryInfoKey(reg_key)
-
-                subkeys = []
-                for i in range(subkey_count):
-                    subkeys.append(winreg.EnumKey(reg_key, i))
-
-                # Get values
-                values = {}
-                for i in range(value_count):
-                    value_name, value_data, value_type = winreg.EnumValue(reg_key, i)
-                    values[value_name] = value_data
-
-                return subkeys, values
-        except FileNotFoundError:
-            print("Registry key not found.")
-            return None, None
+            pass
+            # Regeditteki tüm verileri çekme kodu
         except Exception as e:
-            print(f"Error! {e}")
-            return None, None
+            with open(self.errorFile, "a") as errorFile:
+                errorFile.write(f"{e}\n")
 
+            errorFile.close()
+
+    def get_location(self, location, file_name):
+        try:
+            files = os.listdir(location)
+
+            with open(file_name, "w") as amacheFile:
+                for file in files:
+                    file_path = os.path.join(location, file)
+                    with open(file_path, "r") as current_file:
+                        file_content = current_file.read()
+                        amacheFile.write(f"--------------------- {file} ---------------------\n{file_content}\n")
+        except Exception as e:
+            with open(self.errorFile, "a") as errorFile:
+                errorFile.write(f"{e}\n")
+
+            errorFile.close()
+
+Functions = Functions()
 class Application_Execution:
     def Shimcache(self):
+        regedit_key = r"SYSTEM\CurrentControlSet\Control\Session Manager\AppCompatCache"
         pass
 
     def Task_Bar_Feature_Usage(self):
+        regedit_key = r"NTUSER\Software\Microsoft\Windows\CurrentVersion\Explorer\FeatureUsage"
         pass
 
     def Amache(self):
-        pass
+        location = r"C:\Windows\appcompat\Programs\Amcache.hve"
+        Functions.get_location(location, "Amache.txt")
 
     def Jump_Lists(self):
         pass
 
     def Last_Visited_MRU(self):
+        regedit_key = r"NTUSER.DAT\Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\LastVisitedPidlMRU"
         pass
 
     def Commands_Executed_in_the_Run_Dialog(self):
+        regedit_key = r"NTUSER\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU"
         pass
 
     def Windows10_Timeline(self):
@@ -77,46 +89,65 @@ class Application_Execution:
             print(f"{Fore.RED}Error! {e}{Fore.RESET}")
 
     def BAMDAM(self):
+        # regedit_key kontrol edilecek
+        regedit_key = r"SYSTEM\CurrentControlSet\Services\bam\State\UserSettings\{SID}"
         pass
 
     def SRUM(self):
-        pass
+        location = r"C:\Windows\System32\sru"
+        Functions.get_location(location, "SRUM.txt")
 
     def Prefetch(self):
+        location = r"C:\Windows\Prefetch"
+        regedit_path = r"SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters"
+        Functions.get_location(location, "Prefetch.txt")
         pass
 
     def CapabilityAccessManager(self):
+        regedit_path = r"SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore"
+        regedit_path_ = r"NTUSER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore"
         pass
 
     def UserAssist(self):
-        pass
+        # GUID bakılacak
+        regedit_path = r"NTUSER.DAT\Software\Microsoft\Windows\CurrentVersion\Explorer\UserAssist\{GUID}\Count"
 
 class File_and_Folder_Opening:
     def OpenSaveMRU(self):
+        regedit_path = r"NTUSER.DAT\Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\OpenSavePIDlMRU"
         pass
 
     def RecentFiles(self):
+        regedit_path = r"NTUSER.DAT\Software\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs"
         pass
 
     def MS_Word_Reading_Locations(self):
+        regedit_path = r"NTUSER\Software\Microsoft\Offi ce\<Version>\Word\Reading Locations"
         pass
 
     def Last_Visited_MRU(self):
+        regedit_path = r"NTUSER.DAT\Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\LastVisitedPidlMRU"
         pass
 
     def Shorcut_Files(self):
         pass
 
     def OfficeRecentFiles(self):
+        regedit_path = r"NTUSER.DAT\Software\Microsoft\Offi ce\<Version>\<AppName>\File MRU"
+        regedit_path_ = r"NTUSER.DAT\Software\Microsoft\Offi ce\<Version>\<AppName>\User MRU\LiveId_####\File MRU"
+        regedit_path__ = r"NTUSER.DAT\Software\Microsoft\Offi ce\<Version>\<AppName>\User MRU\AD_####\File MRU"
         pass
 
     def ShellBags(self):
+        regedit_path = r"NTUSER.DAT\Software\Microsoft\Windows\Shell\BagMRU"
+        regedit_path_ = r"NTUSER.DAT\Software\Microsoft\Windows\Shell\Bags"
         pass
 
     def JumpLists(self):
         pass
 
     def OfficeTrustRecords(self):
+        regedit_path = r"NTUSER\Software\Microsoft\Offi ce\<Version>\<AppName>\Security\Trusted Documents\TrustRecords"
         pass
 
     def OfficeOAlerts(self):
@@ -130,22 +161,28 @@ class Deleted_Items_and_File_Existence:
         pass
 
     def WindowsSearchDatabase(self):
-        pass
+        location = r"C:\ProgramData\Microsoft\Search\Data\Applications\Windows\Windows.edb"
+        location_ = r"C:\ProgramData\Microsoft\Search\Data\Applications\Windows\GatherLogs\SystemIndex"
+        Functions.get_location(location, "WindowsSearchDatabase.txt")
+        Functions.get_location(location_, "WindowsSearchDatabase2.txt")
 
     def InternetExplorerFile(self):
         pass
 
     def SearchWordWheelQuery(self):
+        regedit_path = r"NTUSER.DAT\Software\Microsoft\Windows\CurrentVersion\Explorer\WordWheelQuery"
         pass
 
     def UserTypedPaths(self):
+        regedit_path = r"NTUSER\Software\Microsoft\Windows\CurrentVersion\Explorer\TypedPaths"
         pass
 
     def Thumbcache(self):
         pass
 
     def RecycleBin(self):
-        pass
+        location = r"C:\$Recycle.Bin"
+        Functions.get_location(location, "Recycle.txt")
 
 class Browser_Activity:
     def HistoryAndDownloadHistory(self):
@@ -271,33 +308,18 @@ class SystemInformation:
         try:
             target_directory = r"C:\ProgramData\Microsoft\Windows Defender\Support"
 
-            with open(f"{target_directory}\\MPDetection-20240419-192123.log", "r") as MPDetection:
-                DefenderDetection = MPDetection.read()
-
-            MPDetection.close()
-
-            with open(f"{target_directory}\\MPDeviceControl-20240419-221710.log", "r") as MPDeviceControl:
-                DefenderDeviceControl = MPDeviceControl.read()
-
-                MPDeviceControl.close()
-
-            with open(f"{target_directory}\\MPLog-20240419-192123.log", "r") as MPLog:
-                DefenderLog = MPLog.read()
-
-            MPLog.close()
-
-            with open(f"{target_directory}\\MPScanSkip-20240420-132450.log", "r") as MPScanSkip:
-                DefenderScanSkip = MPScanSkip.read()
-
-            MPScanSkip.close()
+            files = os.listdir(target_directory)
 
             with open("Windows_Defender.txt", "w") as WindowsDefender:
-                WindowsDefender.write(
-                    str(f"--------------------- Defender Detection ---------------------\n{DefenderDetection}\n--------------------- Defender Device Control ---------------------\n{DefenderDeviceControl}\n--------------------- Defender Log ---------------------\n{DefenderLog}\n--------------------- Defender Scan Skip ---------------------\n{DefenderScanSkip}"))
-            WindowsDefender.close()
+                for file in files:
+                    file_path = os.path.join(target_directory, file)
+                    with open(file_path, "r") as current_file:
+                        file_content = current_file.read()
+                        WindowsDefender.write(f"--------------------- {file} ---------------------\n{file_content}\n")
 
         except Exception as e:
-            print(f"Error! {e}")
+            with open("defenderError.txt", "w") as defenderErrFile:
+                defenderErrFile.write(f"Error! : {e}")
 
     def Operating_System_Version(self):
         pass
