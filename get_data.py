@@ -18,6 +18,7 @@ class Functions:
                             i += 1
                         except WindowsError:
                             break
+
             except Exception as e:
                 with open(self.errorFile, "a") as errorFile:
                     errorFile.write(f"{e}\n")
@@ -261,7 +262,9 @@ class Browser_Activity:
 
 class CloudStorage:
     def OneDrive(self):
-        pass
+        hkey = winreg.HKEY_CURRENT_USER
+        regedit_path = r"NTUSER\Software\Microsoft\OneDrive\Accounts\<Personal | Business1>"
+        Functions.get_regedit(hkey, regedit_path, "Onedrive.txt")
 
     def Google_Drive_for_Desktop(self):
         pass
@@ -283,7 +286,9 @@ class Account_Usage:
         pass
 
     def User_Accounts(self):
-        pass
+        hkey = winreg.HKEY_LOCAL_MACHINE
+        regedit_key = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList"
+        Functions.get_regedit(hkey, regedit_key, "User_Accounts.txt")
 
     def RDP(self):
         pass
@@ -299,32 +304,62 @@ class Account_Usage:
 
 class Network_Activity_and_Physical_Location:
     def Network_History(self):
-        pass
+        hkey = winreg.HKEY_LOCAL_MACHINE
+        regedit_key = r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces"
+        regedit_key_ = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkCards"
+        regedit_key__ = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Signatures\Unmanaged"
+        regedit_key___ = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Signatures\Managed"
+        regedit_key____ = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Nla\Cache"
+        regedit_key_____ = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Profiles"
+        Functions.get_regedit(hkey, regedit_key, "Network_History.txt")
+        Functions.get_regedit(hkey, regedit_key_, "Network_History2.txt")
+        Functions.get_regedit(hkey, regedit_key__, "Network_History3.txt")
+        Functions.get_regedit(hkey, regedit_key___, "Network_History4.txt")
+        Functions.get_regedit(hkey, regedit_key____, "Network_History5.txt")
 
     def Browser_URL_Parameters(self):
         pass
 
     def Timezone(self):
-        pass
+        hkey = winreg.HKEY_LOCAL_MACHINE
+        regedit_key = r"SYSTEM\CurrentControlSet\Control\TimeZoneInformation"
+        Functions.get_regedit(hkey, regedit_key, "Browser_URL_Parameters.txt")
 
     def WLAN_Evet_Log(self):
         pass
 
     def Network_Interfaces(self):
-        pass
+        hkey = winreg.HKEY_LOCAL_MACHINE
+        regedit_key = r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces"
+        regedit_key_ = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkCards"
+        Functions.get_regedit(hkey, regedit_key, "Timezone.txt")
+        Functions.get_regedit(hkey, regedit_key_, "Timezone2.txt")
 
     def SRUM(self):
-        pass
+        location = r"C:\Windows\System32\SRU"
+        Functions.get_location(location, "SRUM.txt")
 
 class External_Device_USB_Usage:
     def USB_Device_Identification(self):
-        pass
+        hkey = winreg.HKEY_LOCAL_MACHINE
+        regedit_key = r"SYSTEM\CurrentControlSet\Enum\USBSTOR"
+        regedit_key_ = r"SYSTEM\CurrentControlSet\Enum\USB"
+        regedit_key__ = r"SYSTEM\CurrentControlSet\Enum\SCSI"
+        regedit_key___ = r"SYSTEM\CurrentControlSet\Enum\HID"
+        Functions.get_regedit(hkey, regedit_key, "USB_Device_Identification.txt")
+        Functions.get_regedit(hkey, regedit_key_, "USB_Device_Identification2.txt")
+        Functions.get_regedit(hkey, regedit_key__, "USB_Device_Identification3.txt")
+        Functions.get_regedit(hkey, regedit_key___, "USB_Device_Identification4.txt")
 
     def Event_Logs(self):
         pass
 
     def Drive_Letter_and_Volume_Name(self):
-        pass
+        hkey = winreg.HKEY_LOCAL_MACHINE
+        regedit_key = r"SOFTWARE\Microsoft\Windows Portable Devices\Devices"
+        regedit_key_ = r"SOFTWARE\Microsoft\Windows Search\VolumeInfoCache"
+        Functions.get_regedit(hkey, regedit_key, "Event_Logs.txt")
+        Functions.get_regedit(hkey, regedit_key_, "Event_Logs2.txt")
 
     def User_Information(self):
         pass
@@ -333,10 +368,13 @@ class External_Device_USB_Usage:
         pass
 
     def Connection_Timestamps(self):
-        pass
+        location = r"C:\Windows\inf"
+        Functions.get_location(location, "Connection_Timestamps.txt")
 
     def VSN(self):
-        pass
+        hkey = winreg.HKEY_LOCAL_MACHINE
+        regedit_key = r"SOFTWARE\Microsoft\WindowsNT\CurrentVersion\EMDMgmt"
+        Functions.get_regedit(hkey, regedit_key, "VSN.txt")
 
 class SystemInformation:
     def Windows_Defender(self):
@@ -357,7 +395,11 @@ class SystemInformation:
                 defenderErrFile.write(f"Error! : {e}")
 
     def Operating_System_Version(self):
-        pass
+        hkey = winreg.HKEY_LOCAL_MACHINE
+        regedit_key = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion"
+        regedit_key_ = r"SYSTEM\Setup\Source OS"
+        Functions.get_regedit(hkey, regedit_key, "Operating_System_Version.txt")
+        Functions.get_regedit(hkey, regedit_key_, "Operating_System_Version2.txt")
 
     def ComputerName(self):
         try:
@@ -366,10 +408,23 @@ class SystemInformation:
             print(f"{Fore.RED}Error! {e}{Fore.RESET}")
 
     def System_Boot_Autostart_Programs(self):
-        pass
+        hkey = winreg.HKEY_LOCAL_MACHINE
+        regedit_key = r"SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce"
+        regedit_key_ = r"SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run"
+        regedit_key__ = r"SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
+        regedit_key___ = r"SYSTEM\CurrentControlSet\Services"
+        Functions.get_regedit(hkey, regedit_key, "System_Boot_Autostart_Programs.txt")
+        Functions.get_regedit(hkey, regedit_key_, "System_Boot_Autostart_Programs2.txt")
+        Functions.get_regedit(hkey, regedit_key__, "System_Boot_Autostart_Programs3.txt")
+        Functions.get_regedit(hkey, regedit_key___, "System_Boot_Autostart_Programs4.txt")
 
     def System_Last_Shutdown_Time(self):
-        pass
+        hkey = winreg.HKEY_CURRENT_USER
+        regedit_key = r"SYSTEM\CurrentControlSet\Control\Windows"
+        regedit_key_ = r"SYSTEM\CurrentControlSet\Control\Watchdog\Display"
+        Functions.get_regedit(hkey, regedit_key, "System_Last_Shutdown_Time.txt")
+        Functions.get_regedit(hkey, regedit_key_, "System_Last_Shutdown_Time2.txt")
+
 
 class Start:
     def StartAll(self):
