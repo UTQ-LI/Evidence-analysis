@@ -1,5 +1,7 @@
-import winreg, os, socket, sqlite3
+import winreg, os, socket, sqlite3, ctypes, sys
 from colorama import Fore
+
+ShellExecute = ctypes.windll.shell32.ShellExecuteW
 
 class Functions:
     def __init__(self):
@@ -17,25 +19,41 @@ class Functions:
                             regeditFile.write(f"{name} : {value}\n")
                             i += 1
                         except WindowsError:
-                            break
+                            key.Close()
 
             except Exception as e:
                 with open(self.errorFile, "a") as errorFile:
                     errorFile.write(f"{e}\n")
+                    key.Close()
         except Exception as e:
             with open(self.errorFile, "a") as errorFile:
                 errorFile.write(f"{e}\n")
 
-    def get_location(self, location, file_name):
+    def get_location(self, location, file_name, option):
         try:
             files = os.listdir(location)
 
-            with open(file_name, "w") as amacheFile:
-                for file in files:
-                    file_path = os.path.join(location, file)
-                    with open(file_path, "r") as current_file:
-                        file_content = current_file.read()
-                        amacheFile.write(f"--------------------- {file} ---------------------\n{file_content}\n")
+            with open(file_name, "w") as getLocation:
+                if option == 0:
+                    for file in files:
+                        file_path = os.path.join(location, file)
+                        with open(file_path, "r") as current_file:
+                            file_content = current_file.read()
+                            getLocation.write(f"--------------------- {file} ---------------------\n{file_content}\n")
+                    getLocation.close()
+                elif option == 1:
+                    with open(location, "r") as File_:
+                        file_content_ = File_.read()
+
+                    File_.close()
+                    getLocation.write(f"--------------------- {location} ---------------------\n{file_content_}\n")
+                    getLocation.close()
+
+                else:
+                    with open(self.errorFile, "a") as errorFile:
+                        errorFile.write(f"Geçersiz seçenek seçildi! ({file_name} seçilen seçenek: {option})\n")
+
+                    errorFile.close()
         except Exception as e:
             with open(self.errorFile, "a") as errorFile:
                 errorFile.write(f"{e}\n")
@@ -44,6 +62,18 @@ class Functions:
 
 Functions = Functions()
 class Application_Execution:
+    def miniDump(self):
+        location = f"{os.environ.get('SYSTEMROOT')}"
+        extract_location = os.path.join(location, "Minidump")
+
+        Functions.get_location(extract_location, "miniDump.txt", 0)
+
+    def crashDump(self):
+        location = f"{os.environ.get('SYSTEMROOT')}"
+        programName = "MEMORY.DMP"
+        extract_location = os.path.join(location, programName)
+        Functions.get_location(extract_location, "crashDump.txt", 1)
+
     def Shimcache(self):
         hkey = winreg.HKEY_LOCAL_MACHINE
         regedit_key = r"SYSTEM\CurrentControlSet\Control\Session Manager\AppCompatCache"
@@ -429,101 +459,94 @@ class SystemInformation:
 class Start:
     def StartAll(self):
         application_Execution = Application_Execution()
-        application_Execution.Shimcache()
-        application_Execution.Task_Bar_Feature_Usage()
-        application_Execution.Amache()
-        application_Execution.Jump_Lists()
-        application_Execution.Last_Visited_MRU()
-        application_Execution.Commands_Executed_in_the_Run_Dialog()
-        application_Execution.Windows10_Timeline()
-        application_Execution.BAMDAM()
-        application_Execution.SRUM()
-        application_Execution.Prefetch()
-        application_Execution.CapabilityAccessManager()
-        application_Execution.UserAssist()
-        # Application Execution Sonu
-        # .................................
-        file_and_Folder_Opening = File_and_Folder_Opening()
-        file_and_Folder_Opening.OpenSaveMRU()
-        file_and_Folder_Opening.RecentFiles()
-        file_and_Folder_Opening.MS_Word_Reading_Locations()
-        file_and_Folder_Opening.Last_Visited_MRU()
-        file_and_Folder_Opening.Shorcut_Files()
-        file_and_Folder_Opening.OfficeRecentFiles()
-        file_and_Folder_Opening.ShellBags()
-        file_and_Folder_Opening.JumpLists()
-        file_and_Folder_Opening.OfficeTrustRecords()
-        file_and_Folder_Opening.OfficeOAlerts()
-        file_and_Folder_Opening.InternetExplorerFile()
-        # File and Folder Opening Sonu
-        # .................................
-        deleted_Items_and_File_Existence = Deleted_Items_and_File_Existence()
-        deleted_Items_and_File_Existence.ThumbsDB()
-        deleted_Items_and_File_Existence.WindowsSearchDatabase()
-        deleted_Items_and_File_Existence.InternetExplorerFile()
-        deleted_Items_and_File_Existence.SearchWordWheelQuery()
-        deleted_Items_and_File_Existence.UserTypedPaths()
-        deleted_Items_and_File_Existence.Thumbcache()
-        deleted_Items_and_File_Existence.RecycleBin()
-        # Deleted Items and File Existence Sonu
-        # .................................
-        browser_activity = Browser_Activity()
-        browser_activity.HistoryAndDownloadHistory()
-        browser_activity.MediaHistory()
-        browser_activity.HTML5WebStorage()
-        browser_activity.HTML5FileSystem()
-        browser_activity.AutoCompleteData()
-        browser_activity.Browser_Preferences()
-        browser_activity.Cache()
-        browser_activity.Bookmarks()
-        browser_activity.Stored_Credentials()
-        browser_activity.Browser_Downloads()
-        browser_activity.Extensions()
-        browser_activity.Session_Restore()
-        browser_activity.Cookies()
-        # Browser Activity Sonu
-        # .................................
-        cloudStorage = CloudStorage()
-        cloudStorage.OneDrive()
-        cloudStorage.Google_Drive_for_Desktop()
-        cloudStorage.Box_Drive()
-        cloudStorage.Dropbox()
-        # CloudStorage Sonu
-        # .................................
-        account_Usage = Account_Usage()
-        account_Usage.Cloud_Account_Details()
-        account_Usage.Last_Login_and_Password_Change()
-        account_Usage.Service_Events()
-        account_Usage.User_Accounts()
-        account_Usage.RDP()
-        account_Usage.SuccessfulFailedLogons()
-        account_Usage.Authentication_Events()
-        account_Usage.Logon_Event_Types()
-        # Account Usage
-        # .................................
-        network_Activity_and_Physical_Location = Network_Activity_and_Physical_Location()
-        network_Activity_and_Physical_Location.Network_History()
-        network_Activity_and_Physical_Location.Browser_URL_Parameters()
-        network_Activity_and_Physical_Location.Timezone()
-        network_Activity_and_Physical_Location.WLAN_Evet_Log()
-        network_Activity_and_Physical_Location.Network_Interfaces()
-        network_Activity_and_Physical_Location.SRUM()
-        # Network Activity and Physical Location Sonu
-        # .................................
-        external_Device_USB_Usage = External_Device_USB_Usage()
-        external_Device_USB_Usage.USB_Device_Identification()
-        external_Device_USB_Usage.Event_Logs()
-        external_Device_USB_Usage.Drive_Letter_and_Volume_Name()
-        external_Device_USB_Usage.User_Information()
-        external_Device_USB_Usage.ShortcutFiles()
-        external_Device_USB_Usage.Connection_Timestamps()
-        external_Device_USB_Usage.VSN()
-        # External Device USB Usage Sonu
-        # .................................
-        systemInformation = SystemInformation()
-        systemInformation.Windows_Defender()
-        systemInformation.Operating_System_Version()
-        systemInformation.ComputerName()
-        systemInformation.System_Boot_Autostart_Programs()
-        systemInformation.System_Last_Shutdown_Time()
-        # System Information Sonu
+        application_Execution.miniDump()
+        application_Execution.crashDump()
+        # application_Execution.Shimcache()
+        # application_Execution.Task_Bar_Feature_Usage()
+        # application_Execution.Amache()
+        # application_Execution.Jump_Lists()
+        # application_Execution.Last_Visited_MRU()
+        # application_Execution.Commands_Executed_in_the_Run_Dialog()
+        # application_Execution.Windows10_Timeline()
+        # application_Execution.BAMDAM()
+        # application_Execution.SRUM()
+        # application_Execution.Prefetch()
+        # application_Execution.CapabilityAccessManager()
+        # application_Execution.UserAssist()
+        #
+        # file_and_Folder_Opening = File_and_Folder_Opening()
+        # file_and_Folder_Opening.OpenSaveMRU()
+        # file_and_Folder_Opening.RecentFiles()
+        # file_and_Folder_Opening.MS_Word_Reading_Locations()
+        # file_and_Folder_Opening.Last_Visited_MRU()
+        # file_and_Folder_Opening.Shorcut_Files()
+        # file_and_Folder_Opening.OfficeRecentFiles()
+        # file_and_Folder_Opening.ShellBags()
+        # file_and_Folder_Opening.JumpLists()
+        # file_and_Folder_Opening.OfficeTrustRecords()
+        # file_and_Folder_Opening.OfficeOAlerts()
+        # file_and_Folder_Opening.InternetExplorerFile()
+        #
+        # deleted_Items_and_File_Existence = Deleted_Items_and_File_Existence()
+        # deleted_Items_and_File_Existence.ThumbsDB()
+        # deleted_Items_and_File_Existence.WindowsSearchDatabase()
+        # deleted_Items_and_File_Existence.InternetExplorerFile()
+        # deleted_Items_and_File_Existence.SearchWordWheelQuery()
+        # deleted_Items_and_File_Existence.UserTypedPaths()
+        # deleted_Items_and_File_Existence.Thumbcache()
+        # deleted_Items_and_File_Existence.RecycleBin()
+        #
+        # browser_activity = Browser_Activity()
+        # browser_activity.HistoryAndDownloadHistory()
+        # browser_activity.MediaHistory()
+        # browser_activity.HTML5WebStorage()
+        # browser_activity.HTML5FileSystem()
+        # browser_activity.AutoCompleteData()
+        # browser_activity.Browser_Preferences()
+        # browser_activity.Cache()
+        # browser_activity.Bookmarks()
+        # browser_activity.Stored_Credentials()
+        # browser_activity.Browser_Downloads()
+        # browser_activity.Extensions()
+        # browser_activity.Session_Restore()
+        # browser_activity.Cookies()
+        #
+        # cloudStorage = CloudStorage()
+        # cloudStorage.OneDrive()
+        # cloudStorage.Google_Drive_for_Desktop()
+        # cloudStorage.Box_Drive()
+        # cloudStorage.Dropbox()
+        #
+        # account_Usage = Account_Usage()
+        # account_Usage.Cloud_Account_Details()
+        # account_Usage.Last_Login_and_Password_Change()
+        # account_Usage.Service_Events()
+        # account_Usage.User_Accounts()
+        # account_Usage.RDP()
+        # account_Usage.SuccessfulFailedLogons()
+        # account_Usage.Authentication_Events()
+        # account_Usage.Logon_Event_Types()
+        #
+        # network_Activity_and_Physical_Location = Network_Activity_and_Physical_Location()
+        # network_Activity_and_Physical_Location.Network_History()
+        # network_Activity_and_Physical_Location.Browser_URL_Parameters()
+        # network_Activity_and_Physical_Location.Timezone()
+        # network_Activity_and_Physical_Location.WLAN_Evet_Log()
+        # network_Activity_and_Physical_Location.Network_Interfaces()
+        # network_Activity_and_Physical_Location.SRUM()
+        #
+        # external_Device_USB_Usage = External_Device_USB_Usage()
+        # external_Device_USB_Usage.USB_Device_Identification()
+        # external_Device_USB_Usage.Event_Logs()
+        # external_Device_USB_Usage.Drive_Letter_and_Volume_Name()
+        # external_Device_USB_Usage.User_Information()
+        # external_Device_USB_Usage.ShortcutFiles()
+        # external_Device_USB_Usage.Connection_Timestamps()
+        # external_Device_USB_Usage.VSN()
+        #
+        # systemInformation = SystemInformation()
+        # systemInformation.Windows_Defender()
+        # systemInformation.Operating_System_Version()
+        # systemInformation.ComputerName()
+        # systemInformation.System_Boot_Autostart_Programs()
+        # systemInformation.System_Last_Shutdown_Time()
