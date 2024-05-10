@@ -1,4 +1,4 @@
-import winreg, os, socket, sqlite3, ctypes, sys
+import winreg, os, socket, sqlite3, ctypes
 from colorama import Fore
 
 ShellExecute = ctypes.windll.shell32.ShellExecuteW
