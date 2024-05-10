@@ -21,6 +21,7 @@ class Functions:
                             i += 1
                         except WindowsError:
                             key.Close()
+                            break
 
             except Exception as e:
                 with open(self.errorFile, "a") as errorFile:
@@ -144,9 +145,10 @@ class Application_Execution:
 
     def Prefetch(self):
         location = r"C:\Windows\Prefetch"
+        hkey = winreg.HKEY_LOCAL_MACHINE
         regedit_path = r"SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters"
         Functions.get_location(location, "Prefetch.txt")
-        pass
+        Functions.get_regedit(hkey, regedit_path, "Prefetch(Regedit_key).txt")
 
     def CapabilityAccessManager(self):
         hkey = winreg.HKEY_LOCAL_MACHINE
@@ -433,6 +435,8 @@ class SystemInformation:
     def ComputerName(self):
         try:
             print(f"Computer Name: {socket.gethostname()}")
+            with open("ComputerName.txt", "w") as ComputerNameFile:
+                ComputerNameFile.write(f"Computer Name : {socket.gethostname()}")
         except Exception as e:
             print(f"{Fore.RED}Error! {e}{Fore.RESET}")
 
@@ -458,9 +462,9 @@ class SystemInformation:
 class Start:
     def StartAll(self):
         application_Execution = Application_Execution()
-        # application_Execution.miniDump()
-        # application_Execution.crashDump()
-        # application_Execution.Shimcache()
+        application_Execution.miniDump()
+        application_Execution.crashDump()
+        application_Execution.Shimcache()
         application_Execution.Task_Bar_Feature_Usage()
         application_Execution.Amache()
         application_Execution.Jump_Lists()
