@@ -5,15 +5,25 @@ class Functions:
     def __init__(self):
         self.errorFile = "errors.txt"
 
-    def get_regedit(self, regedit_path):
+    def get_regedit(self, hkey, regedit_key, file_name):
         try:
-            pass
-            # Regeditteki tüm verileri çekme kodu
+            key = winreg.OpenKey(hkey, regedit_key)
+            try:
+                with open(file_name, "w") as regeditFile:
+                    i = 0
+                    while True:
+                        try:
+                            name, value, _ = winreg.EnumValue(key, i)
+                            regeditFile.write(f"{name} : {value}\n")
+                            i += 1
+                        except WindowsError:
+                            break
+            except Exception as e:
+                with open(self.errorFile, "a") as errorFile:
+                    errorFile.write(f"{e}\n")
         except Exception as e:
             with open(self.errorFile, "a") as errorFile:
                 errorFile.write(f"{e}\n")
-
-            errorFile.close()
 
     def get_location(self, location, file_name):
         try:
@@ -34,12 +44,14 @@ class Functions:
 Functions = Functions()
 class Application_Execution:
     def Shimcache(self):
+        hkey = winreg.HKEY_LOCAL_MACHINE
         regedit_key = r"SYSTEM\CurrentControlSet\Control\Session Manager\AppCompatCache"
-        pass
+        Functions.get_regedit(hkey, regedit_key, "Shimcache.txt")
 
     def Task_Bar_Feature_Usage(self):
+        hkey = winreg.HKEY_CURRENT_USER
         regedit_key = r"NTUSER\Software\Microsoft\Windows\CurrentVersion\Explorer\FeatureUsage"
-        pass
+        Functions.get_regedit(hkey, regedit_key, "Task_Bar_Feature_Usage.txt")
 
     def Amache(self):
         location = r"C:\Windows\appcompat\Programs\Amcache.hve"
@@ -49,12 +61,14 @@ class Application_Execution:
         pass
 
     def Last_Visited_MRU(self):
+        hkey = winreg.HKEY_CURRENT_USER
         regedit_key = r"NTUSER.DAT\Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\LastVisitedPidlMRU"
-        pass
+        Functions.get_regedit(hkey, regedit_key, "MRU.txt")
 
     def Commands_Executed_in_the_Run_Dialog(self):
+        hkey = winreg.HKEY_CURRENT_USER
         regedit_key = r"NTUSER\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU"
-        pass
+        Functions.get_regedit(hkey, regedit_key, "Commands_Executed_in_the_Run_Dialog.txt")
 
     def Windows10_Timeline(self):
         try:
@@ -90,8 +104,9 @@ class Application_Execution:
 
     def BAMDAM(self):
         # regedit_key kontrol edilecek
+        hkey = winreg.HKEY_LOCAL_MACHINE
         regedit_key = r"SYSTEM\CurrentControlSet\Services\bam\State\UserSettings\{SID}"
-        pass
+        Functions.get_regedit(hkey, regedit_key, "BAMDAM.txt")
 
     def SRUM(self):
         location = r"C:\Windows\System32\sru"
@@ -104,51 +119,69 @@ class Application_Execution:
         pass
 
     def CapabilityAccessManager(self):
+        hkey = winreg.HKEY_LOCAL_MACHINE
+        hkey_ = winreg.HKEY_CURRENT_USER
         regedit_path = r"SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore"
         regedit_path_ = r"NTUSER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore"
-        pass
+        Functions.get_regedit(hkey, regedit_path, "CapabilityAccessManager.txt")
+        Functions.get_regedit(hkey_, regedit_path_, "CapabilityAccessManager2.txt")
 
     def UserAssist(self):
         # GUID bakılacak
+        hkey = winreg.HKEY_CURRENT_USER
         regedit_path = r"NTUSER.DAT\Software\Microsoft\Windows\CurrentVersion\Explorer\UserAssist\{GUID}\Count"
+        pass
 
 class File_and_Folder_Opening:
     def OpenSaveMRU(self):
+        hkey = winreg.HKEY_CURRENT_USER
         regedit_path = r"NTUSER.DAT\Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\OpenSavePIDlMRU"
-        pass
+        Functions.get_regedit(hkey, regedit_path, "OpenSaveMRU.txt")
 
     def RecentFiles(self):
+        hkey = winreg.HKEY_CURRENT_USER
         regedit_path = r"NTUSER.DAT\Software\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs"
-        pass
+        Functions.get_regedit(hkey, regedit_path, "RecentFiles.txt")
 
     def MS_Word_Reading_Locations(self):
+        hkey = winreg.HKEY_CURRENT_USER
         regedit_path = r"NTUSER\Software\Microsoft\Offi ce\<Version>\Word\Reading Locations"
-        pass
+        Functions.get_regedit(hkey, regedit_path, "MS_Word_Reading_Locations.txt")
 
     def Last_Visited_MRU(self):
+        hkey = winreg.HKEY_CURRENT_USER
         regedit_path = r"NTUSER.DAT\Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\LastVisitedPidlMRU"
-        pass
+        Functions.get_regedit(hkey, regedit_path, "Last_Visited_MRU.txt")
 
     def Shorcut_Files(self):
         pass
 
     def OfficeRecentFiles(self):
+        hkey = winreg.HKEY_CURRENT_USER
+        hkey_ = winreg.HKEY_CURRENT_USER
+        hkey__ = winreg.HKEY_CURRENT_USER
         regedit_path = r"NTUSER.DAT\Software\Microsoft\Offi ce\<Version>\<AppName>\File MRU"
         regedit_path_ = r"NTUSER.DAT\Software\Microsoft\Offi ce\<Version>\<AppName>\User MRU\LiveId_####\File MRU"
         regedit_path__ = r"NTUSER.DAT\Software\Microsoft\Offi ce\<Version>\<AppName>\User MRU\AD_####\File MRU"
-        pass
+        Functions.get_regedit(hkey, regedit_path, "OfficeRecentFiles.txt")
+        Functions.get_regedit(hkey_, regedit_path_, "OfficeRecentFiles2.txt")
+        Functions.get_regedit(hkey__, regedit_path__, "OfficeRecentFiles3.txt")
 
     def ShellBags(self):
+        hkey = winreg.HKEY_CURRENT_USER
+        hkey_ = winreg.HKEY_CURRENT_USER
         regedit_path = r"NTUSER.DAT\Software\Microsoft\Windows\Shell\BagMRU"
         regedit_path_ = r"NTUSER.DAT\Software\Microsoft\Windows\Shell\Bags"
-        pass
+        Functions.get_regedit(hkey, regedit_path, "ShellBags.txt")
+        Functions.get_regedit(hkey_, regedit_path_, "ShellBags2.txt")
 
     def JumpLists(self):
         pass
 
     def OfficeTrustRecords(self):
-        regedit_path = r"NTUSER\Software\Microsoft\Offi ce\<Version>\<AppName>\Security\Trusted Documents\TrustRecords"
-        pass
+        hkey = winreg.HKEY_CURRENT_USER
+        regedit_path = r"NTUSER\Software\Microsoft\Office\<Version>\<AppName>\Security\Trusted Documents\TrustRecords"
+        Functions.get_regedit(hkey, regedit_path, "OfficeTrustRecords.txt")
 
     def OfficeOAlerts(self):
         pass
@@ -170,12 +203,14 @@ class Deleted_Items_and_File_Existence:
         pass
 
     def SearchWordWheelQuery(self):
+        hkey = winreg.HKEY_CURRENT_USER
         regedit_path = r"NTUSER.DAT\Software\Microsoft\Windows\CurrentVersion\Explorer\WordWheelQuery"
-        pass
+        Functions.get_regedit(hkey, regedit_path, "SearchWordWheelQuery.txt")
 
     def UserTypedPaths(self):
+        hkey = winreg.HKEY_CURRENT_USER
         regedit_path = r"NTUSER\Software\Microsoft\Windows\CurrentVersion\Explorer\TypedPaths"
-        pass
+        Functions.get_regedit(hkey, regedit_path, "UserTypedPaths.txt")
 
     def Thumbcache(self):
         pass
