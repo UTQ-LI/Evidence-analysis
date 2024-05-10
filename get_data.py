@@ -20,13 +20,13 @@ class Functions:
                             regeditFile.write(f"{name} : {value}\n")
                             i += 1
                         except WindowsError:
-                            key.Close()
+                            # key.Close()
                             break
 
             except Exception as e:
                 with open(self.errorFile, "a") as errorFile:
                     errorFile.write(f"{e}\n")
-                    key.Close()
+                    # key.Close()
         except Exception as e:
             with open(self.errorFile, "a") as errorFile:
                 errorFile.write(f"{e}\n")
