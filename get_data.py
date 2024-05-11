@@ -99,7 +99,9 @@ class Application_Execution:
         Functions.get_location(location, "Amache.txt", 1)
 
     def Jump_Lists(self):
-        pass
+        location = f"{os.environ.get('USERPROFILE')}"
+        extract_location = os.path.join(location, "AppData", "Roaming", "Microsoft", "Windows", "Recent", "AutomaticDestinations")
+        Functions.get_location(extract_location, "Jump_Lists.txt")
 
     def Last_Visited_MRU(self):
         hkey = winreg.HKEY_CURRENT_USER
@@ -218,7 +220,11 @@ class File_and_Folder_Opening:
         Functions.get_regedit(hkey_, regedit_path_, "ShellBags2.txt")
 
     def JumpLists(self):
-        pass
+        location = f"{os.environ.get('USERPROFILE')}"
+        extract_location = os.path.join(location, "AppData", "Roaming", "Microsoft", "Windows", "Recent", "AutomaticDestinations")
+        extract_location_ = os.path.join(location, "AppData", "Roaming", "Microsoft", "Windows", "Recent","AutomaticDestinations")
+        Functions.get_location(extract_location, "JumpLists.txt")
+        Functions.get_location(extract_location_, "JumpLists2.txt")
 
     def OfficeTrustRecords(self):
         hkey = winreg.HKEY_CURRENT_USER
@@ -324,7 +330,11 @@ class Account_Usage:
         pass
 
     def Service_Events(self):
-        pass
+        location = os.environ.get('SYSTEMROOT')
+        extract_location = os.path.join(location, "System32", "winevt", "logs", "System.evtx")
+        extract_location_ = os.path.join(location, "System32", "winevt", "logs", "Security.evtx")
+        Functions.get_location(extract_location, "Service_Events.txt", 1)
+        Functions.get_location(extract_location_, "Service_Events.txt", 1)
 
     def User_Accounts(self):
         hkey = winreg.HKEY_LOCAL_MACHINE
@@ -332,16 +342,24 @@ class Account_Usage:
         Functions.get_regedit(hkey, regedit_key, "User_Accounts.txt")
 
     def RDP(self):
-        pass
+        location = os.environ.get('SYSTEMROOT')
+        extract_location = os.path.join(location, "System32", "winevt", "logs", "Security.evtx")
+        Functions.get_location(extract_location, "RDP.txt", 1)
 
     def SuccessfulFailedLogons(self):
-        pass
+        location = os.environ.get('SYSTEMROOT')
+        extract_location = os.path.join(location, "System32", "winevt", "logs", "Security.evtx")
+        Functions.get_location(extract_location, "SuccessfulFailedLogons.txt", 1)
 
     def Authentication_Events(self):
-        pass
+        location = os.environ.get('SYSTEMROOT')
+        extract_location = os.path.join(location, "System32", "winevt", "logs", "Security.evtx")
+        Functions.get_location(extract_location, "Authentication_Events.txt", 1)
 
     def Logon_Event_Types(self):
-        pass
+        location = os.environ.get('SYSTEMROOT')
+        extract_location = os.path.join(location, "System32", "winevt", "logs", "Security.evtx")
+        Functions.get_location(extract_location, "Logon_Event_Types.txt", 1)
 
 class Network_Activity_and_Physical_Location:
     def Network_History(self):
