@@ -36,20 +36,20 @@ class Functions:
         try:
             print(f"{file_name} yapılıyor...")
 
-            with open(file_name, "w") as getLocation:
+            with open(file_name, "w", encoding='cp437') as getLocation:
                 if option is None:
                     files = os.listdir(location)
 
                     for file in files:
                         file_path = os.path.join(location, file)
 
-                        with open(file_path, "r") as current_file:
+                        with open(file_path, "r", encoding='cp437') as current_file:
                             file_content = current_file.read()
                             getLocation.write(f"--------------------- {file} ---------------------\n{file_content}\n")
 
                     getLocation.close()
                 elif option == 1:
-                    with open(location, "r") as File_:
+                    with open(location, "r", encoding='cp437') as File_:
                         file_content_ = File_.read()
 
                     File_.close()
