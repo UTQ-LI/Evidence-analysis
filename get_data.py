@@ -375,6 +375,7 @@ class Network_Activity_and_Physical_Location:
         Functions.get_regedit(hkey, regedit_key__, "Network_History3.txt")
         Functions.get_regedit(hkey, regedit_key___, "Network_History4.txt")
         Functions.get_regedit(hkey, regedit_key____, "Network_History5.txt")
+        Functions.get_regedit(hkey, regedit_key_____, "Network_History6.txt")
 
     def Browser_URL_Parameters(self):
         pass
@@ -411,7 +412,14 @@ class External_Device_USB_Usage:
         Functions.get_regedit(hkey, regedit_key___, "USB_Device_Identification4.txt")
 
     def Event_Logs(self):
-        pass
+        location = os.environ.get('SYSTEMROOT')
+        extract_location = os.path.join(location, "System32", "winevt", "logs", "System.evtx")
+        extract_location_ = os.path.join(location, "System32", "winevt", "logs", "Security.evtx")
+        extract_location__ = os.path.join(location, "System32", "winevt", "logs", "Microsoft-Windows-Partition", "Diagnostic.evtx")
+        Functions.get_location(extract_location, "Event_Logs.txt", 1)
+        Functions.get_location(extract_location_, "Event_Logs2.txt", 1)
+        Functions.get_location(extract_location__, "Event_Logs3.txt", 1)
+
 
     def Drive_Letter_and_Volume_Name(self):
         hkey = winreg.HKEY_LOCAL_MACHINE
@@ -424,7 +432,11 @@ class External_Device_USB_Usage:
         pass
 
     def ShortcutFiles(self):
-        pass
+        location = os.environ.get('USERPROFILE')
+        extract_location = os.path.join(location, "AppData", "Roaming", "Microsoft", "Windows", "Recent")
+        extract_location_ = os.path.join(location, "AppData", "Roaming", "Microsoft", "Office", "Recent")
+        Functions.get_location(extract_location, "ShortcutFiles.txt", 1)
+        Functions.get_location(extract_location_, "ShortcutFiles2.txt", 1)
 
     def Connection_Timestamps(self):
         location = r"C:\Windows\inf"
