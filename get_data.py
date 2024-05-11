@@ -38,16 +38,19 @@ class Functions:
 
             with open(file_name, "w", encoding='cp437') as getLocation:
                 if option is None:
-                    files = os.listdir(location)
+                    for root, dirs, files in os.walk(location):
+                        print("Klasör:", root)
 
-                    for file in files:
-                        file_path = os.path.join(location, file)
+                        for file_name in files:
+                            file_path = os.path.join(root, file_name)
+                            print(f"Dosya: {file_path}")
+                            with open(file_path, 'r', encoding='cp437') as file:
+                                file_content = file.read()
 
-                        with open(file_path, "r", encoding='cp437') as current_file:
-                            file_content = current_file.read()
-                            getLocation.write(f"--------------------- {file} ---------------------\n{file_content}\n")
+                            file.close()
 
-                    getLocation.close()
+                            getLocation.write(f"--------------------- {file_path} ---------------------\n{file_content}\n")
+
                 elif option == 1:
                     with open(location, "r", encoding='cp437') as File_:
                         file_content_ = File_.read()
