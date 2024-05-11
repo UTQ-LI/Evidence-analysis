@@ -472,8 +472,8 @@ class SystemInformation:
 class Start:
     def StartAll(self):
         application_Execution = Application_Execution()
-        # application_Execution.miniDump()
-        # application_Execution.crashDump()
+        application_Execution.miniDump()
+        application_Execution.crashDump()
         # application_Execution.Shimcache()
         # application_Execution.Task_Bar_Feature_Usage()
         # application_Execution.Amache()
