@@ -25,11 +25,14 @@ class Functions:
 
             except Exception as e:
                 with open(self.errorFile, "a") as errorFile:
-                    errorFile.write(f"{e}\n")
+                    errorFile.write(f"{file_name}: {e}\n")
+                    errorFile.close()
                     # key.Close()
         except Exception as e:
+            print(f"Error: {file_name} : {e}")
             with open(self.errorFile, "a") as errorFile:
-                errorFile.write(f"{e}\n")
+                errorFile.write(f"{file_name}: {e}\n")
+            errorFile.close()
 
     def get_location(self, location, file_name, option=None):
         try:
@@ -57,8 +60,9 @@ class Functions:
 
                     errorFile.close()
         except Exception as e:
+            print(f"Error: {file_name} : {e}")
             with open(self.errorFile, "a") as errorFile:
-                errorFile.write(f"{e}\n")
+                errorFile.write(f"{file_name} : {e}\n")
 
             errorFile.close()
 
@@ -86,7 +90,7 @@ class Application_Execution:
 
     def Amache(self):
         location = r"C:\Windows\appcompat\Programs\Amcache.hve"
-        Functions.get_location(location, "Amache.txt")
+        Functions.get_location(location, "Amache.txt", 1)
 
     def Jump_Lists(self):
         pass

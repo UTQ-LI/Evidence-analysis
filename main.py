@@ -1,3 +1,3 @@
-from get_data import Start
+import get_data
 
-Start().StartAll()
+get_data.Start().StartAll()
