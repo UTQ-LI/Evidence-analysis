@@ -1,4 +1,4 @@
-import winreg, os, socket, sqlite3
+import winreg, os, socket, sqlite3, file_decompressor
 from colorama import Fore
 
 class Functions:
@@ -18,16 +18,20 @@ class Functions:
                             regeditFile.write(f"{name} : {value}\n")
                             i += 1
                         except WindowsError:
-                            # key.Close()
                             break
 
             except Exception as e:
                 with open(self.errorFile, "a") as errorFile:
                     errorFile.write(f"{file_name}: {e}\n")
                     errorFile.close()
-                    # key.Close()
+
+            finally:
+                winreg.CloseKey(key)
+                regeditFile.close()
+
         except Exception as e:
             print(f"Error: {file_name} : {e}")
+
             with open(self.errorFile, "a") as errorFile:
                 errorFile.write(f"{file_name}: {e}\n")
             errorFile.close()
@@ -44,19 +48,19 @@ class Functions:
                         for file_name in files:
                             file_path = os.path.join(root, file_name)
                             print(f"Dosya: {file_path}")
-                            with open(file_path, 'r', encoding='cp437') as file:
-                                file_content = file.read()
 
-                            file.close()
+                            if os.path.splitext(file_path)[1] == ".pf":
+                                getLocation.write(f"---------------------\t{file_name} ({file_path})\t---------------------\n\n\n{file_decompressor.FileDecompressor(file_path, file_name).decompress_file().decode('cp437')}\n\n\n")
 
-                            getLocation.write(f"--------------------- {file_path} ---------------------\n{file_content}\n")
+                            else:
+                                getLocation.write(f"---------------------\t{file_name} ({file_path})\t---------------------\n\n\n{file_path}\n\n\n")
 
                 elif option == 1:
                     with open(location, "r", encoding='cp437') as File_:
                         file_content_ = File_.read()
 
                     File_.close()
-                    getLocation.write(f"--------------------- {location} ---------------------\n{file_content_}\n")
+                    getLocation.write(f"---------------------\t{location}\t---------------------\n{file_content_}\n")
                     getLocation.close()
 
                 else:
@@ -72,6 +76,7 @@ class Functions:
             errorFile.close()
 
 Functions = Functions()
+
 class Application_Execution:
     def miniDump(self):
         location = f"{os.environ.get('SYSTEMROOT')}"
@@ -502,8 +507,8 @@ class SystemInformation:
 class Start:
     def StartAll(self):
         application_Execution = Application_Execution()
-        application_Execution.miniDump()
-        application_Execution.crashDump()
+        # application_Execution.miniDump()
+        # application_Execution.crashDump()
         # application_Execution.Shimcache()
         # application_Execution.Task_Bar_Feature_Usage()
         # application_Execution.Amache()
@@ -516,7 +521,7 @@ class Start:
         application_Execution.Prefetch()
         # application_Execution.CapabilityAccessManager()
         # application_Execution.UserAssist()
-        #
+
         # file_and_Folder_Opening = File_and_Folder_Opening()
         # file_and_Folder_Opening.OpenSaveMRU()
         # file_and_Folder_Opening.RecentFiles()
@@ -529,7 +534,7 @@ class Start:
         # file_and_Folder_Opening.OfficeTrustRecords()
         # file_and_Folder_Opening.OfficeOAlerts()
         # file_and_Folder_Opening.InternetExplorerFile()
-        #
+
         # deleted_Items_and_File_Existence = Deleted_Items_and_File_Existence()
         # deleted_Items_and_File_Existence.ThumbsDB()
         # deleted_Items_and_File_Existence.WindowsSearchDatabase()
@@ -538,7 +543,7 @@ class Start:
         # deleted_Items_and_File_Existence.UserTypedPaths()
         # deleted_Items_and_File_Existence.Thumbcache()
         # deleted_Items_and_File_Existence.RecycleBin()
-        #
+
         # browser_activity = Browser_Activity()
         # browser_activity.HistoryAndDownloadHistory()
         # browser_activity.MediaHistory()
@@ -553,13 +558,13 @@ class Start:
         # browser_activity.Extensions()
         # browser_activity.Session_Restore()
         # browser_activity.Cookies()
-        #
+
         # cloudStorage = CloudStorage()
         # cloudStorage.OneDrive()
         # cloudStorage.Google_Drive_for_Desktop()
         # cloudStorage.Box_Drive()
         # cloudStorage.Dropbox()
-        #
+
         # account_Usage = Account_Usage()
         # account_Usage.Cloud_Account_Details()
         # account_Usage.Last_Login_and_Password_Change()
@@ -569,7 +574,7 @@ class Start:
         # account_Usage.SuccessfulFailedLogons()
         # account_Usage.Authentication_Events()
         # account_Usage.Logon_Event_Types()
-        #
+
         # network_Activity_and_Physical_Location = Network_Activity_and_Physical_Location()
         # network_Activity_and_Physical_Location.Network_History()
         # network_Activity_and_Physical_Location.Browser_URL_Parameters()
@@ -577,7 +582,7 @@ class Start:
         # network_Activity_and_Physical_Location.WLAN_Evet_Log()
         # network_Activity_and_Physical_Location.Network_Interfaces()
         # network_Activity_and_Physical_Location.SRUM()
-        #
+
         # external_Device_USB_Usage = External_Device_USB_Usage()
         # external_Device_USB_Usage.USB_Device_Identification()
         # external_Device_USB_Usage.Event_Logs()
@@ -586,7 +591,7 @@ class Start:
         # external_Device_USB_Usage.ShortcutFiles()
         # external_Device_USB_Usage.Connection_Timestamps()
         # external_Device_USB_Usage.VSN()
-        #
+
         # systemInformation = SystemInformation()
         # systemInformation.Windows_Defender()
         # systemInformation.Operating_System_Version()
