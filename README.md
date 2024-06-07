@@ -26,4 +26,4 @@ PrefetchReader, Windows işletim sisteminde bulunan prefetch dosyalarını okuya
 Programı çalıştırmak için:
 
 ```sh
-pytohn3 main.py
+cd Evidence-analysis && python3 main.py
