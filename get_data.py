@@ -49,7 +49,7 @@ class Functions:
             with open(file_name, "w") as getLocation:
                 if option is None:
                     for root, dirs, files in os.walk(location):
-                        print("Klasör:", root)
+                        print(f"Klasör: {root}")
 
                         for file_name in files:
                             file_path = os.path.join(root, file_name)
