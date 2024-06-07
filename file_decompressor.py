@@ -75,9 +75,10 @@ class FileDecompressor:
                 if ntFinalUncompressedSize.value != decompressed_size:
                     print('[Warning] The decompressed file size does not match the original file size.')
 
-                print(f'[Success] File decompressed successfully. Output file: {self.output_file}')
+                with open(self.output_file, 'wb') as fout:
+                    fout.write(bytearray(ntDecompressed))
 
-                return bytearray(ntDecompressed)
+                # print(f'[Success] File decompressed successfully. Output file: {self.output_file}')
 
         except Exception as e:
             sys.exit(f"Error: {e}")
