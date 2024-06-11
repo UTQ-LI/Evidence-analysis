@@ -63,7 +63,12 @@ class Functions:
                                     prefetchData = pf_data.PrefetchData()
                                     _file_name, file_run_count, file_executed_times, volumes = prefetchData.read_prefetch_file(File)
 
-                                    getLocation.write(f"---------------------\t{file_name} - ({file_path})\t---------------------\n\n\nFile Name: {_file_name}\nFile Run Count: {file_run_count}\nFile Executed Times: {file_executed_times}\n\nVolumes: {volumes}\n\n\n")
+                                    getLocation.write(f"---------------------\t{file_name} - ({file_path})\t---------------------\n\n\nFile Name: {_file_name}\nFile Run Count: {file_run_count}\nFile Executed Times: \n\n{'\n'.join(str_file_executed_times)}\n\nVolumes:\n")
+
+                                    for volume in volumes:
+                                        getLocation.write(f"{volume}\n")
+
+                                    getLocation.write("\n")
 
                                 elif file_header[0:3] == b'MAM':
                                     file_decompressor.FileDecompressor(file_path, file_path[:-3] + "_decompressedFile.pf").decompress_file()
@@ -76,7 +81,12 @@ class Functions:
 
                                         str_file_executed_times = [i.strftime("%Y-%m-%d %H:%M:%S") for i in file_executed_times]
 
-                                        getLocation.write(f"---------------------\t{file_name} - ({file_path})\t---------------------\n\n\nFile Name: {_file_name}\nFile Run Count: {file_run_count}\nFile Executed Times: \n\n{'\n'.join(str_file_executed_times)}\n\nVolumes: {volumes}\n\n\n")
+                                        getLocation.write(f"---------------------\t{file_name} - ({file_path})\t---------------------\n\n\nFile Name: {_file_name}\nFile Run Count: {file_run_count}\nFile Executed Times: \n\n{'\n'.join(str_file_executed_times)}\n\nVolumes:\n")
+
+                                        for volume in volumes:
+                                            getLocation.write(f"{volume}\n")
+
+                                        getLocation.write("\n")
 
                                     os.remove(decompressed_file_path)
 
@@ -88,8 +98,8 @@ class Functions:
                                         Functions().error("Prefetch dosyası okunamadı!")
 
                                 else:
-                                    print(f"Unknown file header! ({file_header}) ({file_path})")
-                                    Functions.error(f"Unknown file header! ({file_header}) ({file_path})")
+                                    print(f"Unknown file header! ({file_header}) File Path: {file_path}")
+                                    Functions.error(f"Unknown file header! ({file_header}) File Path: {file_path}")
 
                             else:
                                 with open(file_path, "rb") as File:
